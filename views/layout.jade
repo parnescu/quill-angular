@@ -1,0 +1,94 @@
+doctype html
+html
+	head
+		meta(charset="utf-8")
+		meta(name="viewport", content="width=device-width; height=device-height; initial-scale=1.0; maximum-scale=1.0;")
+		title AngularJS App
+		script(src="requirejs/require.js" data-main="js/bootstrap.js")
+		link(href="css/style.css", rel="stylesheet")
+		link(href='http://fonts.googleapis.com/css?family=Lato:400,700|Pontano+Sans' rel='stylesheet' type='text/css')
+	body
+		#page(ng-controller="MainCtrl")
+			header#head
+				h1 Quill API with AngularJS
+				nav
+					a#hideNav(href="#hideNavigation", ng-click="toggleNav($event)", ng-class="{selected: _visibleNav}") {{_navLabel}}
+					form#paramForm(ng-submit="loadChannels(api);", ng-show="_visibleNav")
+						.element 
+							label(for='apiKey') API key
+							input#apiKey(type="text", name="apiKey",ng-model="api.api_key")
+						.element
+							label(for='siteKey') SITE key
+							input#apiKey(type="text", name="siteKey",ng-model="api.site_key")
+						.element
+							input#submitTrigger.actionButton(type="submit", class="load", value="update")
+							a(href="#", class="save", ng-click="saveApiCombination($event)") save config
+					#savedItems(ng-show="_g.saved_items", ng-cloak)
+						h2 Saved keys
+						ul.saved_list
+							li(ng-repeat="item in _g.saved_items", data-name="{{item.name}}")
+								a(href="#" class="update", ng-click="loadApiCombination($event)" data-index="{{$index}}") {{item.name}}
+								a(href="#" class="close", ng-click="removeApiCombination($event)") x
+			section#main
+				#pageIndex(ng-view, class="hidden")
+				img.preloader(src="img/ajax-loader.gif" alt="preloader" ng-show="_g.api.loadInProgress")
+				
+				#error(ng-cloak, ng-show="_g.api.error")
+					h2 {{_g.api.error.title}}
+					p {{_g.api.error.description}}
+					button.close(ng-click="closeError()") OK
+
+				nav#channels
+					h2 Latest trends
+					
+					select#alternateSelection.listDrowdown(ng-show="_g.channels", ng-cloak, ng-model="_g.currentChannel", ng-options="channel.id as channel.name for channel in _g.channels", ng-change="loadItemsByDropdown()")
+					ul.list(ng-show="_g.channels", ng-cloak)
+						li(ng-repeat="channel in _g.channels")
+							h3
+								a(href="/channel_{{channel.id}}", ng-click="loadItems($event)", data-id="{{channel.id}}", title="{{channel.name}}", data-index="{{$index}}", ng-class="{selected: _g.currentChannel==channel.id}")
+									span.icon &nbsp;
+									|{{channel.name}}
+									span.details
+										|created: {{channel.created_at | date:['dd MMMM yyyy']}}
+
+				section#items
+					header
+						h2(ng-show="!_g.details") Related stories
+						.filters(ng-show="!_g.details && _g.items", ng-cloak)
+							p.orderfilter
+								input#orderSorter(type="checkbox", ng-model="filter_reverse")
+								label(for="orderSorter") show new ones first
+							p.itemsFilter
+								select#nrSorter(ng-model="_g.currentPageSize", ng-options="value for value in _g.items_per_page", ng-change="reloadItems()")
+								label(for="nrSorter") items per page 
+							p.pagination
+								input(ng-model="_g.pages", disabled, type="number", id="pageNumbers")
+								label(for="pageNumbers") of
+								input#pageSorter(ng-model="_g.currentPage", ng-change="loadPage()", type="number", min="1", max="{{_g.pages}}")
+								label(for="pageSorter") page:
+
+					article#details(ng-show="_g.details")
+						button.close(ng-click="closeDetails()") x
+						.content(ng-show="_g.details.name", ng-cloak)
+							h1 {{_g.details.name}}
+							p(ng-show="_g.details.detail.authors", class="author") by {{_g.details.detail.authors}}, {{_g.details.detail.published_at | date:'EEEE, dd MMMM yyyy'}}
+							.summary(ng-bind-html="_g.details.summary")
+							.full(ng-bind-html="_g.details.content", ng-show="_g.details.content")
+							a.button(href='{{_g.details.clickthrough_url}}', target='_blank') view full article 
+
+					ul.list(ng-show="_g.items && !_g.details", ng-cloak)
+							li(ng-repeat="item in _g.items | orderBy:filter_attribute:filter_reverse")
+								h3
+									a(href="/channel_{{_g.currentChannel}}/item_{{item.id}}", data-id="{{item.id}}", ng-click="loadDetails($event)", title="{{item.name}}") {{item.name}}
+										span.icon &nbsp;
+								dl.details(ng-show='item.clickthrough_url')
+									dt created: 
+									dd {{item.created_at | date:['EEEE, dd MMMM yyyy hh:mm']}}
+									
+									dt id:
+									dd {{item.id}}
+									dt &nbsp;
+									dd
+										a(target="_blank", href="{{item.clickthrough_url}}") Clickthrough URL: {{item.clickthrough_url}}				
+			footer
+				p Parnescu Adrian &copy; 2014

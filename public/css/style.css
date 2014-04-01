@@ -1,0 +1,152 @@
+
+/* structure */
+
+html, body, p, div, ul, li, h1, h2, h3, dt, dd, dl { margin:0; padding: 0;}
+section, nav, footer { display: block; overflow: hidden;}
+ul, li { list-style-type: none; }
+a { text-decoration: none; }
+a:hover { color:#f90;}
+label, 
+article, 
+span { display: block;}
+span.icon { float:left; width:16px; height: 16px; margin-right: .5em;}
+span.details { clear:both;}
+
+html,input, label { font-family:'Lato', Arial; font-size:1em;}
+h1,h2,h3 { font-weight: bold;}
+h3, p, a { font-family:'Pontano Sans';}
+h3 span { font-weight: normal;}
+
+.hidden, [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak { display: none !important;}
+
+#page { width:96%; height:96%; margin:2%; display: block; overflow: hidden;}
+
+#head form { margin:0 0 1em 0;}
+#head form label { width:20%; float:left;}
+#head form input[type=text] { min-width:75%;}
+#head .element { margin-bottom:.6em;}
+#head .element .save { margin:0 1em;}
+
+#head #savedItems { clear:both; display: block; overflow: hidden; margin:.5em 0 1em 0;}
+#head #savedItems ul { display: block; overflow: hidden;}
+#head #savedItems li { float:left; margin-right:1em;}
+#head #savedItems li a.close { padding:0 .3em;}
+
+#head,
+#main {  max-width:900px; margin:0 auto;}
+#main { height: 100%; position: relative; overflow: visible;}
+
+
+#main #channels { /*width:20%; float:left;*/}
+#main #channels #alternateSelection { display: none; width:100%; padding:.3em .5em;}
+
+#main #items {/* width:80%;*/ position: relative; height: 100%; overflow: auto;}
+#main #items header { width:100%; clear:both; float:none; display: block;}
+#main #items header h2 { float:left; clear:both;}
+#main #items header p { display: inline-block; float:right; margin:0 0 .5em .8em; }
+#main #items header p * { float:right;}
+
+
+#main #items input[type=number] { max-width: 50px; text-align: center; border: none; text-decoration: underline; background: none;}
+#main #items #nrSorter { border:none; text-decoration: underline; margin:.1em;}
+#main #items .list li { margin-bottom:1.3em;}
+#main #items .list .details dd { margin-right:1em;}
+
+
+#main #details { position: relative; top:0; left:0; background: #fff; height:100%; width: 100%; display: block; overflow: hidden;}
+#main #details .close { float:right;}
+
+
+footer p { float:right;}
+
+
+@media all and (max-width:600px) and (min-width:0px){
+	#head form label { width:100%; clear: both; float:none;}
+	#head form input[type=text] { width:95%; display: block;}
+
+	#main #channels { float:none; clear:both; width:100%;}
+	#main #channels #alternateSelection { display: block;}
+	#main #channels .list { display:none;}
+
+	#main #items { width: 100%; margin-top:2em;}
+	#main #items .filters { clear:both;}
+}
+
+/* end - structure */
+
+
+
+
+
+
+/* color & detail */
+/*
+	> used colors:
+		normal: #99D6F5;
+		hovered: #79ABC2;
+		clicked: #5B7C8D;
+		light: #F4F4F4;
+		dark: #282828;
+
+		green: #05C537;
+		darkerGreen: #04AE60;
+*/
+
+
+.list a { display: block; overflow: hidden; clear:both; font-size:.8em;}
+.preloader { clear:both; display: block; overflow: hidden; width:32px; margin:0 auto;}
+.button { padding:.5em .8em; display: inline-block; overflow:hidden; border-radius:.6em; background:#99D6F5; font-weight: bold; color:#fff; margin:.6em 0; }
+.button:hover { background:#79ABC2; color:#fff;}
+.actionButton { cursor:pointer; border:none; background:#05C537; padding:.6em .9em; display: inline-block; overflow:hidden; border-radius:.3em; font-weight: bold; color:#fff; margin:.6em 0; }
+.actionButton:hover { background:#04AE60;}
+
+
+nav {  margin-top:.5em;}
+span.icon { background:url('../img/sheet1.png') no-repeat;}
+a { color:#99D6F5;}
+a:hover { color:#79ABC2;}
+a.selected,
+#main #items .list .details a:hover,
+#main #channels .list a.selected { color:#F4F4F4;} 
+#main #channels .list a { line-height:1em;}
+
+#main #channels .list a:hover span.icon,
+#main #channels .list a.selected span.icon { background-position:-17px -85px;}
+
+#main #channels .list span.icon { background-position:0px -85px;}
+#main #channels .list span.details { color:#ccc; font-size:.6em; text-align: right}
+#main #channels .list li { float:left; margin: 0 1em .5em 0; background:#18548B; display:block; padding:.5em; border-radius:.3em; }
+#main #channels { margin-bottom:1em;}
+
+#main #items .list .details * { display: inline; color:#ccc; font-size:.7em;}
+#main #items .list span.icon { background-position:-17px -421px;}
+#main #items .filters { display: block; overflow: hidden;}
+
+#main h2 { margin:.3em 0 .5em 0}
+#main #details { }
+#main #details h1 { font-size:1.5em; }
+#main #details .author { font-size:.7em; color:#282828;}
+#main #details .summary { margin-top:.6em;}
+#main #details .full { margin:1em 0;}
+
+
+#head #savedItems label { margin-bottom:.5em;}
+#head #savedItems li { background:#9C0B5E; border-radius: 2em; padding:.2em .4em;} 
+#head #savedItems li a { color:#F4F4F4; font-size:.8em;}
+#head #savedItems li a.update { padding:.3em .6em;}
+#head #savedItems li a.update:hover { color:#99D6F5;}
+#head #savedItems li a.close { padding:.3em; font-weight: bold;}
+#head #savedItems li a.close:hover { color:#79ABC2;}
+#head .saved_list { margin-top: .5em;}
+
+#head form { background: #dedede; padding:1.5em 1em; border-radius: .5em; border-top-left-radius:0;}
+#head .element:nth-child(3) { margin:0;}
+#head .element:nth-child(3) .actionButton { margin-bottom:0;}
+#head .element .save { color:#04AE60; font-weight: bold;}
+#head #hideNav { display: inline-block; padding: .5em; background: #dedede; border-radius: .5em;}
+#head #hideNav.selected { border-bottom-left-radius:0; border-bottom-right-radius:0; }
+
+footer { max-width: 900px; margin:0 auto; background: #dedede; padding:1em;}
+
+
+/* end - color & detail */

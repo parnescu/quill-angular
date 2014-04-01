@@ -1,0 +1,22 @@
+{
+  "name": "AngularJS-JSONP-Quill-API-vendor",
+  "version": "1.0.0",
+  "authors": [
+    "Parnescu Adrian"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "*",
+    "jasmine": "*",
+    "jquery": "*",
+    "angular-route": "*"
+  }
+}

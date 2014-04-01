@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width; height=device-height; initial-scale=1.0; maximum-scale=1.0;">
+    <title>AngularJS App</title>
+    <script src="build/quill.final.js"></script>
+    <link href="css/style.css" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700|Pontano+Sans" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+    <div id="page" ng-controller="MainCtrl">
+        <header id="head">
+            <h1>Quill API with AngularJS</h1>
+            <nav><a id="hideNav" href="#hideNavigation" ng-click="toggleNav($event)" ng-class="{selected: _visibleNav}">{{_navLabel}}</a>
+                <form id="paramForm" ng-submit="loadChannels(api);" ng-show="_visibleNav">
+                    <div class="element">
+                        <label for="apiKey">API key</label>
+                        <input id="apiKey" type="text" name="apiKey" ng-model="api.api_key">
+                    </div>
+                    <div class="element">
+                        <label for="siteKey">SITE key</label>
+                        <input id="apiKey" type="text" name="siteKey" ng-model="api.site_key">
+                    </div>
+                    <div class="element">
+                        <input id="submitTrigger" type="submit" value="update" class="actionButton load"><a href="#" ng-click="saveApiCombination($event)" class="save">save config</a>
+                    </div>
+                </form>
+                <div id="savedItems" ng-show="_g.saved_items" ng-cloak>
+                    <h2>Saved keys</h2>
+                    <ul class="saved_list">
+                        <li ng-repeat="item in _g.saved_items" data-name="{{item.name}}"><a href="#" ng-click="loadApiCombination($event)" data-index="{{$index}}" class="update">{{item.name}}</a><a href="#" ng-click="removeApiCombination($event)" class="close">x</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <section id="main">
+            <div id="pageIndex" ng-view class="hidden"></div>
+            <img src="img/ajax-loader.gif" alt="preloader" ng-show="_g.api.loadInProgress" class="preloader">
+            <div id="error" ng-cloak ng-show="_g.api.error">
+                <h2>{{_g.api.error.title}}</h2>
+                <p>{{_g.api.error.description}}</p>
+                <button ng-click="closeError()" class="close">OK</button>
+            </div>
+            <nav id="channels">
+                <h2>Latest trends</h2>
+                <select id="alternateSelection" ng-show="_g.channels" ng-cloak ng-model="_g.currentChannel" ng-options="channel.id as channel.name for channel in _g.channels" ng-change="loadItemsByDropdown()" class="listDrowdown"></select>
+                <ul ng-show="_g.channels" ng-cloak class="list">
+                    <li ng-repeat="channel in _g.channels">
+                        <h3><a href="/channel_{{channel.id}}" ng-click="loadItems($event)" data-id="{{channel.id}}" title="{{channel.name}}" data-index="{{$index}}" ng-class="{selected: _g.currentChannel==channel.id}"><span class="icon">&nbsp;</span>{{channel.name}}<span class="details">created: {{channel.created_at | date:['dd MMMM yyyy']}}</span></a></h3>
+                    </li>
+                </ul>
+            </nav>
+            <section id="items">
+                <header>
+                    <h2 ng-show="!_g.details">Related stories</h2>
+                    <div ng-show="!_g.details &amp;&amp; _g.items" ng-cloak class="filters">
+                        <p class="orderfilter">
+                            <input id="orderSorter" type="checkbox" ng-model="filter_reverse">
+                            <label for="orderSorter">show new ones first</label>
+                        </p>
+                        <p class="itemsFilter">
+                            <select id="nrSorter" ng-model="_g.currentPageSize" ng-options="value for value in _g.items_per_page" ng-change="reloadItems()"></select>
+                            <label for="nrSorter">items per page</label>
+                        </p>
+                        <p class="pagination">
+                            <input ng-model="_g.pages" disabled type="number" id="pageNumbers">
+                            <label for="pageNumbers">of</label>
+                            <input id="pageSorter" ng-model="_g.currentPage" ng-change="loadPage()" type="number" min="1" max="{{_g.pages}}">
+                            <label for="pageSorter">page:</label>
+                        </p>
+                    </div>
+                </header>
+                <article id="details" ng-show="_g.details">
+                    <button ng-click="closeDetails()" class="close">x</button>
+                    <div ng-show="_g.details.name" ng-cloak class="content">
+                        <h1>{{_g.details.name}}</h1>
+                        <p ng-show="_g.details.detail.authors" class="author">by {{_g.details.detail.authors}}, {{_g.details.detail.published_at | date:'EEEE, dd MMMM yyyy'}}</p>
+                        <div ng-bind-html="_g.details.summary" class="summary"></div>
+                        <div ng-bind-html="_g.details.content" ng-show="_g.details.content" class="full"></div><a href="{{_g.details.clickthrough_url}}" target="_blank" class="button">view full article </a>
+                    </div>
+                </article>
+                <ul ng-show="_g.items &amp;&amp; !_g.details" ng-cloak class="list">
+                    <li ng-repeat="item in _g.items | orderBy:filter_attribute:filter_reverse">
+                        <h3><a href="/channel_{{_g.currentChannel}}/item_{{item.id}}" data-id="{{item.id}}" ng-click="loadDetails($event)" title="{{item.name}}">{{item.name}}<span class="icon">&nbsp;</span></a></h3>
+                        <dl ng-show="item.clickthrough_url" class="details"><dt>created: </dt>
+                            <dd>{{item.created_at | date:['EEEE, dd MMMM yyyy hh:mm']}}</dd><dt>id:</dt>
+                            <dd>{{item.id}}</dd><dt>&nbsp;</dt>
+                            <dd><a target="_blank" href="{{item.clickthrough_url}}">Clickthrough URL: {{item.clickthrough_url}}				</a>
+                            </dd>
+                        </dl>
+                    </li>
+                </ul>
+            </section>
+        </section>
+        <footer>
+            <p>Parnescu Adrian &copy; 2014</p>
+        </footer>
+    </div>
+</body>
+
+</html>
